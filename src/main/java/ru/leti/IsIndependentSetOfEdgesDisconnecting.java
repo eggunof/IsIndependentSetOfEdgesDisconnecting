@@ -3,6 +3,7 @@ package ru.leti;
 import ru.leti.wise.task.graph.model.Color;
 import ru.leti.wise.task.graph.model.Edge;
 import ru.leti.wise.task.graph.model.Graph;
+import ru.leti.wise.task.graph.model.Vertex;
 import ru.leti.wise.task.plugin.graph.GraphProperty;
 
 import java.util.HashSet;
@@ -68,19 +69,19 @@ public class IsIndependentSetOfEdgesDisconnecting implements GraphProperty {
         // Count the number of components in the graph
         int initialComponents = countComponents(graph);
 
-        // Create a graph without the edges to remove
-        Graph modifiedGraph = new Graph();
-        modifiedGraph.setVertexCount(graph.getVertexCount());
-        modifiedGraph.setEdgeCount(graph.getEdgeCount() - edgesToRemove.size());
-        modifiedGraph.setDirect(graph.isDirect());
         // Get the list of remaining edges
         List<Edge> remainingEdges = graph.getEdgeList().stream()
                 .filter(edge -> !edgesToRemove.contains(edge))
                 .collect(Collectors.toList());
-        // Set the edge list of the modified graph
-        modifiedGraph.setEdgeList(remainingEdges);
-        // Set the vertex list of the modified graph
-        modifiedGraph.setVertexList(graph.getVertexList());
+
+        // Create a graph without the edges to remove
+        Graph modifiedGraph = new Graph(
+                graph.getVertexCount(),
+                graph.getEdgeCount() - edgesToRemove.size(),
+                graph.isDirect(),
+                remainingEdges,
+                graph.getVertexList()
+        );
 
         // Count the number of components in the modified graph
         int newComponents = countComponents(modifiedGraph);
@@ -101,7 +102,8 @@ public class IsIndependentSetOfEdgesDisconnecting implements GraphProperty {
         int componentsCount = 0;
 
         // Iterate over all vertices in the graph
-        for (int vertexId = 0; vertexId < graph.getVertexCount(); ++vertexId) {
+        for (Vertex vertex : graph.getVertexList()) {
+            int vertexId = vertex.getId();
             // If the vertex has not been visited yet, start a new search
             if (!visitedVertexIds.contains(vertexId)) {
                 // Increment the component count
