@@ -1,5 +1,3 @@
-package ru.leti;
-
 import ru.leti.wise.task.graph.model.Color;
 import ru.leti.wise.task.graph.model.Edge;
 import ru.leti.wise.task.graph.model.Graph;
