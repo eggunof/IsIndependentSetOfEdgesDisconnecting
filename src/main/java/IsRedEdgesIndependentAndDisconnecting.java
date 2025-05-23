@@ -10,37 +10,35 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Checks if a graph contains an independent edge set of any color, which is a disconnecting set.
+ * Checks whether a graph contains a matching set of edges that is also a disconnecting edge set.
  */
-public class IsIndependentSetOfEdgesDisconnecting implements GraphProperty {
+public class IsRedEdgesIndependentAndDisconnecting implements GraphProperty {
+    /**
+     * Color of the edges, which are checked.
+     */
+    private static final Color EdgesColor = Color.RED;
+
     @Override
     public boolean run(Graph graph) {
-        // Iterate over each color available in the Color enum
-        for (Color color : Color.values()) {
-            // Collect edges of the current color into a set
-            Set<Edge> edges = graph.getEdgeList().stream()
-                    .filter(e -> e.getColor() == color)
-                    .collect(Collectors.toSet());
-            // Check if the set of edges is independent and disconnecting
-            if (isIndependent(edges) && isDisconnectingSet(graph, edges)) {
-                // If both conditions are met, return true
-                return true;
-            }
-        }
-        // Return false if no such set of edges is found
-        return false;
+        // Filter edges by the specified color
+        List<Edge> edges = graph.getEdgeList().stream()
+                .filter(e -> e.getColor() == EdgesColor)
+                .collect(Collectors.toList());
+
+        // Check if the edges are independent and form a disconnecting set
+        return isIndependent(edges) && isDisconnectingList(graph, edges);
     }
 
     /**
-     * Checks if a set of edges is independent.
+     * Checks if a list of edges is independent.
      * <p>
      * Two edges are independent if they do not share any vertices.
      * <p>
      *
-     * @param edges the set of edges to check
+     * @param edges the list of edges to check
      * @return true if the set of edges is independent, false otherwise
      */
-    private boolean isIndependent(Set<Edge> edges) {
+    private boolean isIndependent(List<Edge> edges) {
         // We keep track of used vertices to make sure no vertex is used twice.
         Set<Integer> usedVertices = new HashSet<>();
         for (Edge edge : edges) {
@@ -60,10 +58,10 @@ public class IsIndependentSetOfEdgesDisconnecting implements GraphProperty {
      * Checks if a set of edges is a disconnecting set.
      *
      * @param graph         the graph to check
-     * @param edgesToRemove the set of edges to remove
+     * @param edgesToRemove the list of edges to remove
      * @return true if the set of edges is a disconnecting set, false otherwise
      */
-    private boolean isDisconnectingSet(Graph graph, Set<Edge> edgesToRemove) {
+    private boolean isDisconnectingList(Graph graph, List<Edge> edgesToRemove) {
         // Count the number of components in the graph
         int initialComponents = countComponents(graph);
 

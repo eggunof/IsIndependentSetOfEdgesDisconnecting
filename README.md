@@ -1,6 +1,6 @@
-# `IsIndependentSetOfEdgesDisconnecting`
+# `IsRedEdgesIndependentAndDisconnecting`
 
-Класс `IsIndependentSetOfEdgesDisconnecting` проверяет, существует ли в графе паросочетание, которое одновременно
+Класс `IsRedEdgesIndependentAndDisconnecting` проверяет, существует ли в графе паросочетание, которое одновременно
 является рассекающим набором рёбер.
 
 ### Основные определения
